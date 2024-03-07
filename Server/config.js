@@ -7,10 +7,11 @@ export const DB_NAME = process.env.DB_NAME || 'betafinal';
 export const DB_PORT = process.env.DB_PORT || 3306;
 
 const database = {
-    host: 'localhost',
-    user: 'root',
-    port: 3306,
-    password: 'nohayplanetaB10!',
-    database: 'betafinal'
+    host: DB_HOST,
+    port: DB_PORT,
+    user: DB_USER, 
+    password: DB_PASSWORD,
+    database: DB_NAME,
+    ssl: false
 };
 export default database 
