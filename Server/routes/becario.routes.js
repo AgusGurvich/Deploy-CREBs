@@ -22,10 +22,7 @@ router.get("/dashboard",  auth.isLoggedIn, auth.isBecario , async (req,res)=> {
 
 router.get("/historial_pendientes", auth.isLoggedIn, auth.isBecario , async (req,res)=> {
     const result = await pool.query('SELECT * FROM pedidos WHERE Estado = "Pendiente"');
-    console.log(result[0][0]);
-
     let pedidos = result[0];
-    console.log(pedidos);
     res.render('dashHistorial', {
         pedidos : pedidos
     });
@@ -33,12 +30,9 @@ router.get("/historial_pendientes", auth.isLoggedIn, auth.isBecario , async (req
 
 router.get("/usuario/historial/:id", auth.isLoggedIn, auth.isBecario , async (req,res)=> {
     const { id } = req.params;
-    console.log(id);
     const result = await pool.query('SELECT * FROM pedidos WHERE user_id = ?', [id]);
-    console.log(result[0]);
-
+    
     let pedidos = result[0];
-    console.log(pedidos);
     res.render('dashHistorial', {
         pedidos : pedidos
     });
@@ -63,17 +57,17 @@ router.get("/usuarios", auth.isLoggedIn, auth.isBecario , async (req,res)=> {
 
     const result = await pool.query('SELECT * FROM users WHERE licencia = 1');
     let usuarios = result[0];
-    console.log(usuarios);
+
     res.render("dashboard_Usuarios", {
         usuarios : usuarios
     });
 })
 
 router.get("/usuariosFetch", auth.isBecario, auth.isLoggedIn , async (req,res)=> {
-    console.log("hola");
+    
     const result = await pool.query('SELECT * FROM users');
     let usuarios = result[0];
-    console.log(usuarios);
+
     res.send(usuarios);
 
 });
@@ -107,7 +101,7 @@ router.post("/pedidoFromDash", auth.isBecario, upload.single('archivo'), async (
     const id = resultUserID[0][0].id;
     const ahora = new Date();
     const fechaHora = ahora.toISOString().slice(0, 19).replace('T', ' '); // Convierte a formato  
-    console.log(fechaHora);
+    
 
     if(archivo) {
         console.log('archivo positivo');
@@ -213,7 +207,7 @@ router.put('/pedido/changeEstado/:id', async (req,res) => {
 });
 
 router.put('/pedido/changePrecio/:id/:newPrice', auth.isBecario, async (req,res) => {
-    console.log('llego el pedido a cambiar precio');
+    
     const { id , newPrice } = req.params;
     const informationQuery = 'SELECT ingresado, precio, estadoPago, user_id FROM pedidos WHERE id = ?';
     const resultInformation = await pool.query(informationQuery, [id]);
@@ -221,7 +215,7 @@ router.put('/pedido/changePrecio/:id/:newPrice', auth.isBecario, async (req,res)
     const userIDQuery =  'SELECT saldo FROM users WHERE id = ?';
     const saldoResult = await pool.query(userIDQuery, user_id);
     const { saldo } = saldoResult[0][0];
-    console.log(precio);
+    
 
     const redirectURL = `/Dashpedido/${id}`;
     if(estadoPago == 'Abonado') { // ¿Estaba abonado ya?
@@ -251,12 +245,12 @@ router.put('/pedido/changePrecio/:id/:newPrice', auth.isBecario, async (req,res)
                    await actualizarPrecio(newPrice, id);  //Actualizar precio
                    await actualizarEstado(nuevoEstado, id);  // Cambiar estado a abonado
                 } else { // La seña era menor al nuevo precio
-                    console.log('Esta viniendo aca');
+                    
                     await actualizarPrecio(newPrice, id);  //Actualizar precio
                 }
             }
         } else { //No estaba señado tampoco. Quiere decir que ingresado == 0;
-            console.log('Está llegando a este otro');
+
             await actualizarPrecio(newPrice, id);  //Actualizar precio
         }
     }
@@ -296,7 +290,7 @@ router.put('/Dashpedido/dash/senarPedido/:id', auth.isLoggedIn , async (req, res
     //lo quiere señar: pagar el 50%;
     const { id } = req.params;
     const redirecTURL =  `/pedido/${id}`;
-    console.log('PETICION SEÑAR LLEGANDO A DASH');
+
     const precioQuery = 'SELECT precio, user_id, ingresado FROM pedidos WHERE id = ?';
     const pedidoResult = await pool.query(precioQuery, [id]);
     const { ingresado, precio, user_id} = pedidoResult[0][0];
@@ -331,8 +325,7 @@ router.put('/Dashpedido/dash/senarPedido/:id', auth.isLoggedIn , async (req, res
 router.put('/Dashpedido/dash/pagarPedido/:id', auth.isLoggedIn , async (req, res) => {
     const { id } = req.params;
     const redirecTURL =  `/pedido/${id}`;
-    console.log(id);
-    console.log('PETICION LLEGANDO A DASH');
+
 
     const precioQuery = 'SELECT precio, user_id, ingresado FROM pedidos WHERE id = ?';
     const pedidoResult = await pool.query(precioQuery, [id]);
