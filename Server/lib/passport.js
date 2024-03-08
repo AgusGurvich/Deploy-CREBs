@@ -10,8 +10,6 @@ import session from 'express-session';
         passwordField: 'password',
         passReqToCallback: true
     }, async (req, username, password, done)=> {
-        console.log('hola');
-
         const DNI = username;
         const userQuery = 'SELECT * FROM users WHERE DNI = ?';
         const result = await pool.query(userQuery, [DNI]);
@@ -20,7 +18,6 @@ import session from 'express-session';
             const user = result[0][0];
             const bandera = await helpers.matchPasswordLogin(password, user.password);
             if(bandera) {
-                console.log('success');
                return done(null, user, req.flash('success', 'Bienvenido' + user.nombre));
             }
             else {
@@ -88,7 +85,7 @@ passport.use('local.signup', new LocalStrategy({
                         DNI
                     }
                     newUser.id = result[0].insertId;
-                    console.log(newUser);
+                    
                     return done(null, newUser) // No ha habido ningun error y pasamos el newUser para serializarlo.
 
             }}}
@@ -145,7 +142,7 @@ passport.use('local.signupBecario', new LocalStrategy({
                     DNI
                 }
                 newUser.id = result[0].insertId;
-                console.log(newUser);
+                
                 return done(null, newUser) // No ha habido ningun error y pasamos el newUser para serializarlo.
 
         }}}

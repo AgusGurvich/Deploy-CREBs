@@ -14,9 +14,7 @@ const auth = {
     },
 
     isBecario(req, res, next) {
-        console.log('ejecutando isbecario');
         if(req.user.licencia == 2){
-            console.log('es Becario');
             return next();
         }
         console.log('no es becario');
@@ -24,19 +22,14 @@ const auth = {
     }, 
 
     isUser(req, res, next) {
-        console.log('ejecutando isUser');
         if(req.user.licencia == 1){
-            console.log('es usuario');
             return next();
         }
         if(req.user.licencia == 2)
-        console.log('ES BECARIO');
         return res.redirect('/dashboard');
     },
     isLinea (req, res, next) {
-        console.log('ejecutando isUser');
         if(req.user.licencia == 3){
-            console.log('es linea');
             return next();
         }
         return res.redirect('/login');
@@ -44,7 +37,6 @@ const auth = {
 
     chooseIndex (req) {
         if(req.user.licencia == 2){
-            console.log('es Becario');
             return true;
         }
         return false;
