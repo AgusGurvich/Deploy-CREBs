@@ -199,8 +199,8 @@
                 else {
                     open.textContent = "Saldo Insuficiente";
                     open.style.cssText = "background-color: var(--text);";
-                    // open.onclick = e => {open.style.cssText = "background-color: var(--thirdty);";}
-                    habilitarVentana(flotante, ventana_pago, open, close);
+                    open.onclick = e => {open.style.cssText = "background-color: var(--thirdty);";}
+                    
                     pagarTotal(payButton, reserveButton, precio, pedidoID);
                 }
             }
