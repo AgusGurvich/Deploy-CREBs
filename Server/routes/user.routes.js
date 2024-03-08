@@ -110,10 +110,7 @@ router.get("/historial", async (req,res)=> {
     const id = req.user.id;
     const pedidosQuery = 'SELECT * FROM pedidos WHERE user_id = ?';
     const result = await pool.query(pedidosQuery, [id]);
-
-
     let pedidos = result[0];
-
     res.render('historial', {
         pedidos : pedidos
     });
@@ -125,10 +122,8 @@ router.get("/pedido/:id", auth.isLoggedIn, auth.isUser , async (req, res)=> {
 
     const selectQuery = 'SELECT * FROM pedidos WHERE id = ?';
     const result = await pool.query(selectQuery, [id]);
-
     const pedido = result[0][0];
     const user_id = result[0][0].user_id;
-    console.log(user_id);
     const userQuery = 'SELECT nombre, saldo FROM users WHERE id = ?';
     const user = await pool.query(userQuery, [user_id]);
     const UserInformation = user[0][0];
@@ -161,7 +156,6 @@ router.put('/senarPedido/:id', auth.isLoggedIn , auth.isUser,  async (req, res) 
       //lo quiere señar: pagar el 50%;
       const { id } = req.params;
       const redirecTURL =  `/pedido/${id}`;
-      console.log('PETICION SEÑAR LLEGANDO A DASH');
       const precioQuery = 'SELECT precio, user_id, ingresado FROM pedidos WHERE id = ?';
       const pedidoResult = await pool.query(precioQuery, [id]);
       const { ingresado, precio, user_id} = pedidoResult[0][0];
@@ -196,8 +190,7 @@ router.put('/senarPedido/:id', auth.isLoggedIn , auth.isUser,  async (req, res) 
 router.put('/pagarPedido/:id', auth.isLoggedIn ,auth.isUser , async (req, res) => {
     const { id } = req.params;
     const redirecTURL =  `/pedido/${id}`;
-    console.log(id);
-    console.log('PETICION LLEGANDO A DASH');
+
 
     const precioQuery = 'SELECT precio, user_id, ingresado FROM pedidos WHERE id = ?';
     const pedidoResult = await pool.query(precioQuery, [id]);
@@ -213,7 +206,7 @@ router.put('/pagarPedido/:id', auth.isLoggedIn ,auth.isUser , async (req, res) =
     } 
 
     async function pagarAAbonar (ingresado, precio, saldo, user_id, id) {
-        console.log('ejecuentando funcion pagar a abonar');
+    
         const descarga = precio - ingresado;
         const nuevoSaldo = saldo - descarga;
         const nuevoIngreso = ingresado + descarga;

@@ -15,7 +15,7 @@ router.get('/control', auth.isLinea ,(req, res) => {
     res.render('control');
 });
 
-router.get('/crearBecario', (req, res) => {
+router.get('/crearBecario', auth.isLinea ,(req, res) => {
     res.render('crearBecario');
 });
 

@@ -149,7 +149,7 @@ header h1 {
             border: 10px dashed var(--thirdty);
             border-radius: 4px;
             background-color: var(--lightBlue);
-
+            text-align: center;
             min-height: 500px;
             height: 1fr;
             width: 60%;
@@ -164,7 +164,7 @@ header h1 {
         }
 
         .parrafo {
-
+            text-align: center;
             color: var(--fondo);
             margin: 20px 0;
             display: flex;
@@ -177,7 +177,12 @@ header h1 {
             text-align: center;
         }
 
+        .parrafo b {
+            text-align: center;
+        }
+
         .parrafo span {
+            text-align: center;
             width: 51%;
             text-align: center;
         }

@@ -8,7 +8,7 @@ const inputSearch = searchContainer.querySelector('input');
 const boxSuggestions = document.querySelector('.container-suggestions');
 
 const searchLink = document.getElementById('buscar');
-const url = 'http://localhost:4000/usuariosFetch';
+const url = '/usuariosFetch';
 function select(element) {
 	let selectUserData = element.textContent;
 	inputSearch.value = selectUserData;
