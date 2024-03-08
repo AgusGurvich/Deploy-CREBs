@@ -12,7 +12,7 @@ router.get("/login", auth.isNotLoggedIn ,(req,res)=> {
     res.render('login');
 });
 
-router.post("/login", (req, res, next)=> {
+router.post("/login",  auth.isNotLoggedIn , (req, res, next)=> {
  passport.authenticate('local.signin', {
         successRedirect: '/inicio',
         failureRedirect: '/login',
