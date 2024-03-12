@@ -107,7 +107,7 @@ router.get("/cargar_saldo", auth.isLoggedIn, auth.isUser , (req,res)=> {
 
 router.get("/historial", async (req,res)=> {
     const id = req.user.id;
-    const pedidosQuery = 'SELECT * FROM pedidos WHERE user_id = ?';
+    const pedidosQuery = 'SELECT * FROM pedidos WHERE user_id = ? ORDER BY id DESC';
     const result = await pool.query(pedidosQuery, [id]);
     let pedidos = result[0];
     res.render('historial', {

@@ -21,7 +21,7 @@ router.get("/dashboard",  auth.isLoggedIn, auth.isBecario , async (req,res)=> {
 
 
 router.get("/historial_pendientes", auth.isLoggedIn, auth.isBecario , async (req,res)=> {
-    const result = await pool.query('SELECT * FROM pedidos WHERE Estado = "Pendiente"');
+    const result = await pool.query('SELECT * FROM pedidos WHERE Estado = "Pendiente" ORDER BY id DESC');
     let pedidos = result[0];
     res.render('dashHistorial', {
         pedidos : pedidos
@@ -45,7 +45,7 @@ router.get("/cargar_cuenta",  auth.isLoggedIn, auth.isBecario , (req,res)=> {
 
 router.get("/historial_general", async (req,res)=> {
 
-    const result = await pool.query('SELECT  * FROM pedidos');
+    const result = await pool.query('SELECT  * FROM pedidos ORDER BY id DESC');
     let pedidos = result[0];
     res.render('dashHistorial', {
         pedidos:pedidos
