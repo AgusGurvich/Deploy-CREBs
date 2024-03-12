@@ -84,7 +84,7 @@ router.post("/pedido", auth.isUser, upload.single('archivo'), async (req, res) =
     res.redirect("/inicio");
 })
 
-router.get('/download/:nombreArchivo', auth.isLoggedIn, auth.isUser ,  async (req, res)  => {
+router.get('/download/:nombreArchivo', auth.isLoggedIn,  async (req, res)  => {
     const nombreArchivo = req.params.nombreArchivo;
   
     // Buscar el nombre del archivo en la base de datos
