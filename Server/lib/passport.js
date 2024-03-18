@@ -13,8 +13,7 @@ import session from 'express-session';
         const DNI = username;
         const userQuery = 'SELECT * FROM users WHERE DNI = ?';
         const result = await pool.query(userQuery, [DNI]);
-        
-        if(result.length > 0) {
+        if(result.length > 0 && password != undefined ) {
             const user = result[0][0];
             const bandera = await helpers.matchPasswordLogin(password, user.password);
             if(bandera) {
