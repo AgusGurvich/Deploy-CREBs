@@ -90,13 +90,30 @@ router.get('/download/:nombreArchivo', auth.isLoggedIn,  async (req, res)  => {
     // Buscar el nombre del archivo en la base de datos
     const selectQuery = 'SELECT nombre, tipo FROM pedidos WHERE nombre_archivo = ?';
 
-    const results = await pool.query(selectQuery, [nombreArchivo]);
-      const { nombre, tipo } = results[0][0];
-      const path = `uploads/${nombreArchivo}`;
-      // Envía el archivo como respuesta
-      res.setHeader('Content-disposition', `attachment; filename=${nombre}`);
-      res.setHeader('Content-type', tipo);
-      fs.createReadStream(path).pipe(res);
+    try{
+        const results = await pool.query(selectQuery, [nombreArchivo]);
+        if (results[0].length === 0) {
+            // Si no se encuentra el archivo, devolver un error 404
+            return res.status(404).send('Archivo no encontrado');
+        }
+        const { nombre, tipo } = results[0][0];
+        const path = `uploads/${nombreArchivo}`;
+        //Revisamos que efectivamente esté
+        fs.access(path, fs.constants.F_OK, (err) => {
+            if (err) {
+                // Si el archivo no existe, devolver un error 404
+                return res.status(404).send('Archivo no encontrado');
+            }
+  
+            // Envía el archivo como respuesta
+            res.setHeader('Content-disposition', `attachment; filename=${nombre}`);
+            res.setHeader('Content-type', tipo);
+            fs.createReadStream(path).pipe(res);
+        });
+
+    } catch (err) {
+        next(err);
+    }
     });
 
 

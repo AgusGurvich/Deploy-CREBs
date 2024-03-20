@@ -99,3 +99,43 @@ const partesHoraNum = partesFecha[1].split(':').map(Number);
 const fecha = new Date(partesFechaNum[0], partesFechaNum[1] - 1, partesFechaNum[2], partesHoraNum[0], partesHoraNum[1], partesHoraNum[2]);
 const timestampEnSegundos = fecha.getTime() / 1000; // Convertir a segundos dividiendo por 1000
 console.log(timestampEnSegundos);
+
+
+
+// Manejar errores de descarga
+
+
+
+router.get('/download/:nombreArchivo', auth.isLoggedIn, async (req, res, next) => {
+  const nombreArchivo = req.params.nombreArchivo;
+
+  // Buscar el nombre del archivo en la base de datos
+  const selectQuery = 'SELECT nombre, tipo FROM pedidos WHERE nombre_archivo = ?';
+
+  try {
+      const results = await pool.query(selectQuery, [nombreArchivo]);
+      if (results[0].length === 0) {
+          // Si no se encuentra el archivo, devolver un error 404
+          return res.status(404).send('Archivo no encontrado');
+      }
+
+      const { nombre, tipo } = results[0][0];
+      const path = `uploads/${nombreArchivo}`;
+
+      // Verificar si el archivo existe en el sistema de archivos
+      fs.access(path, fs.constants.F_OK, (err) => {
+          if (err) {
+              // Si el archivo no existe, devolver un error 404
+              return res.status(404).send('Archivo no encontrado');
+          }
+
+          // Envía el archivo como respuesta
+          res.setHeader('Content-disposition', `attachment; filename=${nombre}`);
+          res.setHeader('Content-type', tipo);
+          fs.createReadStream(path).pipe(res);
+      });
+  } catch (err) {
+      // Manejo de errores en la consulta SQL
+      next(err);
+  }
+});
