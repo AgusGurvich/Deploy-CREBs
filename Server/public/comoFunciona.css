@@ -153,6 +153,7 @@ header h1 {
             min-height: 500px;
             height: 1fr;
             width: 60%;
+            min-width: 260px;
             margin: 100px 20%;
             padding: 20px 10%;
 
@@ -183,6 +184,7 @@ header h1 {
 
         .parrafo span {
             text-align: center;
+            min-width: 220px;
             width: 51%;
             text-align: center;
         }

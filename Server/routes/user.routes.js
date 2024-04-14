@@ -69,7 +69,6 @@ router.post("/pedido", auth.isUser, upload.single('archivo'), async (req, res) =
         const nombre = "Archivo en Link";
         
         const { select, copias, Descripcion, selectFaz, precio, Tipo, Link, Anillado, Fotocopiadora } = req.body;
-        console.log(precio);
         const insertQuery = 'INSERT INTO pedidos (precio, descripción, copias, tipo_impresion, user_id, formato, anillado, link, nombre, fotocopiadora, fecha, color) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);';
         await pool.query(insertQuery, [precio, Descripcion, copias, selectFaz, id, Tipo, Anillado, Link, nombre, Fotocopiadora, fechaHora, color], (err, result) => {
           if (err) { 

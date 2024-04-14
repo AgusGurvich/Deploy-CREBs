@@ -3,7 +3,8 @@ import { pool } from '../db.js';
 import auth from '../lib/auth.js';
 const router = Router();
 
-router.get('/', (req, res) => {
+router.get('/', auth.isLoggedIn, (req, res) => {
+    
     res.render('login');
 });
 

@@ -69,6 +69,12 @@ const dobleFaz = 32.5;
                         bandera = 1;
                         span_name.innerHTML = f.files[0].name;
 
+                        if(f.files[0].type == "image/*"){
+                            img.type = "image/*";
+                            img.src = URL.createObjectURL(f.files[0]);
+                            console.log(e.target.files[0].type);
+                        }
+
                         if(f.files[0].type == "application/pdf"){
                                 img.type = "application/pdf";
                                 img.src = URL.createObjectURL(f.files[0]);

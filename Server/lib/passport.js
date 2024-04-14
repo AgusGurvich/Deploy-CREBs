@@ -13,7 +13,7 @@ import session from 'express-session';
         const DNI = username;
         const userQuery = 'SELECT * FROM users WHERE DNI = ?';
         const result = await pool.query(userQuery, [DNI]);
-        console.log(result);
+        
         if(result.length > 0) {
             const user = result[0][0];
             const bandera = await helpers.matchPasswordLogin(password, user.password);
@@ -85,9 +85,7 @@ passport.use('local.signup', new LocalStrategy({
                         DNI
                     }
                     newUser.id = result[0].insertId;
-                    
                     return done(null, newUser) // No ha habido ningun error y pasamos el newUser para serializarlo.
-
             }}}
 
 }));
