@@ -7,6 +7,7 @@
     --thirdty: #9BCF38;
     --yellow: #00a0a0;
     --red: #D91F11;
+    --naranja: #ee6725;
 
 }
 
@@ -185,6 +186,41 @@ header h1 {
 
 }
 
+#selector {
+    /* border: 1px solid black; */
+    background-color: var(--lightBlue);
+    border-bottom: 2px solid var(--thirdty);
+    box-sizing: border-box;
+    width: 96%;
+    height: 50px;
+
+    margin: 2%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    overflow: hidden;
+}
+
+    .pestaña {
+        /* border: 1px solid black; */
+        box-sizing: border-box;
+        width: 100%;
+        height: 100%;
+        color: var(--fondo);
+        font-family: notosans;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 200ms;
+        overflow: hidden;
+    }
+
+    .pestaña:hover {
+        border-bottom: 2px solid var(--thirdty);
+        color: var(--thirdty);
+    }
+
 #historial_cabeza {
     /* border: 1px solid black; */
 
@@ -247,6 +283,10 @@ header h1 {
 
             transition: all 500ms;
             overflow: hidden;
+        }
+
+        .Pre {
+            background-color: var(--naranja);
         }
 
         .historial_entrada:hover {
@@ -382,6 +422,11 @@ header h1 {
             align-items: center;
             transition: all;
         }
+
+
+
+
+
 
         #success_message {
             background-color: #5BC0DE;

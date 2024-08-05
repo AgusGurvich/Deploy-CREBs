@@ -23,6 +23,53 @@ router.get("/Como_funciona", auth.isLoggedIn, auth.isUser ,(req,res)=> {
     res.render('Como_funciona');
 })
 
+router.get("/prereserva", auth.isLoggedIn , auth.isUser ,async (req,res)=>{ 
+    const prereservaQuery = 'SELECT * FROM prereserva ORDER BY id';
+    const result = await pool.query(prereservaQuery);
+    let prereserva = result[0];
+    res.render('prereserva', {
+        prereserva : prereserva
+    });
+});
+
+router.post("/prereserva/ordenar/:ordenID", auth.isLoggedIn , auth.isUser ,async (req,res)=>{ 
+    //Pido el numero de orden para ingresarlo
+    const id = req.params.ordenID;
+    const prereservaQuery = 'SELECT * FROM prereserva WHERE id = ?';
+    const result = await pool.query(prereservaQuery, [id]);
+    let prereserva = result[0];
+    //Ingreso el pedido a su nombre
+    //Datos del pedido
+    const nombre = prereserva[0].nombre;
+    const precio = prereserva[0].precio;
+    const Descripcion = prereserva[0].nombre;
+    const copias = 1;
+    const tipo_impresion = "Pre";
+    const user_id = req.user.id;
+    const formato = "Pre"; // A4 
+    const anillado = "Prereserva"; // Sin info
+    const Link = prereserva[0].nombre; 
+    const Fotocopiadora = "Pre";
+    const ahora = new Date();
+    const fecha = ahora.toISOString().slice(0, 19).replace('T', ' '); // Convierte a formato  
+    const color = 0;    
+    
+    // Insertar el pedido de prereserva
+    const insertQuery = 'INSERT INTO pedidos (precio, descripción, copias, tipo_impresion, user_id, formato, anillado, link, nombre, fotocopiadora, fecha, color) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);';
+    await pool.query(insertQuery, [precio, Descripcion, copias, tipo_impresion, user_id, formato, anillado, Link, nombre, Fotocopiadora, fecha, color], (err, result) => {
+      if (err) { 
+        console.error('Error al insertar datos en la base de datos:', err);
+        res.status(500).send('Error interno del servidor'); 
+        return;
+      }
+      console.log('El pedido no se subió correctamente');
+    });
+
+
+    res.redirect("/inicio");
+});
+
+
 router.get("/pedido",  auth.isLoggedIn, auth.isUser , (req,res)=> {
     res.render('pedido');
 })

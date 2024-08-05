@@ -12,13 +12,22 @@
     
     <div id="top__of-page">
         <header>
-            <div id="img_top"><img src="/IMG-20231211-WA0080.jpg"></div>
+            <a href="/inicio"><div id="img_top"><img src="IMG-20231211-WA0080.jpg"></div></a>
         </header>
         <div id="menu-icon"><a href="/login"><i class="fa-solid fa-user"></i></a></div>
     </div>
 
     
     <div id="main">
+
+        <div id="selector">
+            <p class="pestaña">No abonado</p>
+            <p class="pestaña">Señado</p>
+            <p class="pestaña">Abonado</p>
+            <p class="pestaña">Prereserva</p>
+            <p class="pestaña">Prereserva Señado</p>
+        </div>
+
         <div id="contenedor_historial">
 
             <div id="historial_cabeza">
@@ -31,7 +40,7 @@
             <div id="historial_cuerpo">
                 <% pedidos.forEach((pedido) => { %>
                     
-                    <div class="historial_entrada">
+                    <div class="historial_entrada  <%= pedido.tipo_impresion %> <%= pedido.estadoPago %>">
 
                         <p class="pedido_id"><%= pedido.id %></p>
                         <p><%= pedido.copias %> copias</p>
@@ -63,6 +72,8 @@
 const estado = document.querySelectorAll('.estado');
 const estadoPago = document.querySelectorAll('.estadoPago');
 const archivos = document.querySelectorAll('.nombre_archivo');
+const selecciones = document.querySelectorAll('.pestaña');
+const entradas = document.querySelectorAll(".historial_entrada");
 
 archivos.forEach( archivo => {
     archivo.onclick = (e) => {   
@@ -90,6 +101,68 @@ if(estado.textContent == 'Listo') {
     estado.style.cssText = "background-color: var(--thirdty);";
 }
 });
+
+selecciones.forEach(selector => {
+    if(selector.textContent == 'Prereserva') { // caso Prereserva donde filtramos por faz (tipo_impresion en sql)
+        selector.addEventListener('mouseover', ()=> {
+            entradas.forEach( entrada => {
+                if(!entrada.classList.contains('Pre')) {     
+                    entrada.style.display = "none";
+                }
+                else {
+                    entrada.style.display = "flex";
+                }
+            });
+        });
+    } else { // caso pendientes y listos donde filtramos por estado
+
+        if(selector.textContent == 'No abonado') { // Manejo de no abonados
+        selector.addEventListener('mouseover', ()=> {
+            entradas.forEach( entrada => {
+                if(!entrada.classList.contains('abonado')) {     
+                    entrada.style.display = "none";
+                }
+                else {
+                    entrada.style.display = "flex";
+                }
+            });
+        });
+
+         } else { 
+
+                if(selector.textContent == 'Prereserva Señado') { // Manejo de pre reserva señados
+                selector.addEventListener('mouseover', ()=> {
+                entradas.forEach( entrada => {
+                    if(entrada.classList.contains('Pre') && entrada.classList.contains('Señado')) {     
+                        entrada.style.display = "flex";
+                    }
+                    else {
+                        entrada.style.display = "none";
+                    }
+                });
+            });
+                } else { 
+                        selector.addEventListener('mouseover', ()=> {
+                        entradas.forEach( entrada => {
+                            if(!entrada.classList.contains(selector.textContent)) {     
+                                entrada.style.display = "none";
+                            }
+                            else {
+                                entrada.style.display = "flex";
+                            }
+                        });
+                    });
+                }
+    }
+ 
+ }
+
+
+
+
+            
+});
+
     </script>
 
 </body>

@@ -14,9 +14,52 @@ router.get("/seleccion", (req,res)=> {
     res.render('seleccion');
 });
 
+
 router.get("/dashboard",  auth.isLoggedIn, auth.isBecario , async (req,res)=> {
     
     res.render('dashboard');
+});
+
+router.get("/prereservaDashboard",  auth.isLoggedIn, auth.isBecario , async (req,res)=> {
+    const prereservaQuery = 'SELECT * FROM prereserva ORDER BY id';
+    const result = await pool.query(prereservaQuery);
+    let prereserva = result[0];
+    res.render('prereservaDashboard', {
+        prereserva : prereserva
+    });
+});
+
+router.get("/agregar/:id",  auth.isLoggedIn, auth.isBecario , async (req,res) => {
+    const { id } = req.params;
+    console.log(id);
+
+        const prereservaQuery = 'SELECT * FROM prereserva WHERE id = ?';
+        const result = await pool.query(prereservaQuery, [id]);
+        let prereserva = result[0];    
+        res.render('prereservaModificar', {
+            prereserva : prereserva
+        });
+});
+
+router.post("/agregarPrereserva", auth.isLoggedIn, auth.isBecario , async (req,res) => {
+    const { nombre , precio, año } = req.body;
+    const insertQuery = 'INSERT INTO prereserva (nombre, precio, año) VALUES (?, ?, ?);';
+    await pool.query(insertQuery, [nombre, precio, año]);
+    res.redirect("/dashboard");
+});
+
+router.post("/modificarPrereserva", auth.isLoggedIn, auth.isBecario , async (req,res) => {
+    const { nombre , precio, año, id} = req.body;
+    const modifyQuery = 'UPDATE prereserva SET año = ?, nombre = ?, precio = ? WHERE id = ?;';
+    await pool.query(modifyQuery, [año, nombre, precio, id]);
+    res.redirect("/dashboard");
+});
+
+router.delete("/prereserva/eliminar/:id", auth.isLoggedIn, auth.isBecario , async (req,res) => {
+        const { id } = req.params;    
+        const deleteQuery = 'DELETE FROM prereserva WHERE id = ?;';
+        await pool.query(deleteQuery, [id]);
+    res.redirect("/dashboard");
 });
 
 
@@ -25,7 +68,7 @@ router.get("/historial_pendientes", auth.isLoggedIn, auth.isBecario , async (req
     let pedidos = result[0];
     res.render('dashHistorial', {
         pedidos : pedidos
-    });
+    }); 
 }) 
 
 router.get("/usuario/historial/:id", auth.isLoggedIn, auth.isBecario , async (req,res)=> {
@@ -44,7 +87,6 @@ router.get("/cargar_cuenta",  auth.isLoggedIn, auth.isBecario , (req,res)=> {
 })
 
 router.get("/historial_general", async (req,res)=> {
-
     const result = await pool.query('SELECT  * FROM pedidos ORDER BY id DESC');
     let pedidos = result[0];
     res.render('dashHistorial', {

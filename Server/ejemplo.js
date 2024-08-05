@@ -139,3 +139,26 @@ router.get('/download/:nombreArchivo', auth.isLoggedIn, async (req, res, next) =
       next(err);
   }
 });
+
+
+
+
+
+
+
+{/* <div id="selector">
+<% let lista = [] %>
+<% pedidos.forEach((elemento)  => { %>
+    <% bandera = true %>
+    <% largo = lista.length %>
+    <% for (let i = 0; i<largo; i++) { %>
+        <% if(elemento.estado == lista[i]) { %>
+            <% bandera = false%>
+        <% } %>
+    <% } %>
+    <% if(bandera) {%>
+        <p class="pestaña"><%= elemento.estado %></p>
+        <% lista.push(elemento.estado) %>
+    <% } %>
+<% }) %>
+</div> */}
