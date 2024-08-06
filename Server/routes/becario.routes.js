@@ -62,7 +62,7 @@ router.delete("/prereserva/eliminar/:id", auth.isLoggedIn, auth.isBecario , asyn
     res.redirect("/dashboard");
 });
 
-<<<<<<< HEAD
+
 
 router.get("/pedidosPrereserva", auth.isLoggedIn, auth.isBecario , async (req,res)=> {
     const result = await pool.query('SELECT * FROM pedidos WHERE tipo_impresion = "Pre" ORDER BY id DESC');
@@ -96,9 +96,6 @@ router.post("/marcarHechos", auth.isLoggedIn, auth.isBecario , async (req,res)=>
      res.redirect("/pedidosPrereserva");
 }) 
 
-
-=======
->>>>>>> 4dfbc0dc3e2cb67c34418b4c8d7e77ce85a3f0c8
 
 router.get("/historial_pendientes", auth.isLoggedIn, auth.isBecario , async (req,res)=> {
     const result = await pool.query('SELECT * FROM pedidos WHERE Estado = "Pendiente" ORDER BY id DESC');
