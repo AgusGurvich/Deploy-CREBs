@@ -139,3 +139,157 @@ router.get('/download/:nombreArchivo', auth.isLoggedIn, async (req, res, next) =
       next(err);
   }
 });
+
+
+
+
+
+
+
+{/* <div id="selector">
+<% let lista = [] %>
+<% pedidos.forEach((elemento)  => { %>
+    <% bandera = true %>
+    <% largo = lista.length %>
+    <% for (let i = 0; i<largo; i++) { %>
+        <% if(elemento.estado == lista[i]) { %>
+            <% bandera = false%>
+        <% } %>
+    <% } %>
+    <% if(bandera) {%>
+        <p class="pestaña"><%= elemento.estado %></p>
+        <% lista.push(elemento.estado) %>
+    <% } %>
+<% }) %>
+</div> */}
+
+
+let libros = [];
+pedidos.forEach(pedido => {
+    let bandera = true;
+    let largo = lista.length; 
+    let encontrado = "";
+    for(let i = 0; i<largo; i++) {  // buscamos este libro en nuestra lista
+      if(pedido.nombre == lista[i][0]) {
+        bandera = false; // Ya aparece este libro en la lista
+        encontrado = lista[i][0];
+      }
+    }
+    if(bandera) { // El elemento es un libro nuevo -> Agregar entrada a la lista
+      // Creamos las posibles entradas
+      if(pedido.estadoPago == "Señado") {
+        if(pedido.estado == "Pendiente") {
+          let nuevo = [pedido.nombre, 1, 1, 0, 0, 1]; // Entrada
+        } else {
+          let nuevo = [pedido.nombre, 1, 1, 0, 1, 0]; // Entrada
+        }
+      } else {
+          if(pedido.estadoPago == "Abonado") {
+            if(pedido.estado == "Pendiente") {
+              let nuevo = [pedido.nombre, 1, 0, 1, 0, 1]; // Entrada
+            } else {
+              let nuevo = [pedido.nombre, 1, 0, 1, 1, 0]; // Entrada
+            }   
+          }
+      } else { // Es no abonado
+        if(pedido.estado == "Pendiente") {
+          let nuevo = [pedido.nombre, 1, 0, 0, 0, 1]; // Entrada
+        } else {
+          let nuevo = [pedido.nombre, 1, 0, 0, 1, 0]; // no señado no abonado pero listo por alguna extraña razón
+        }
+      }
+      lista.push(nuevo);
+    } else { // El elemento ya está en la lista -> Sumar valores a la entrada de la lista
+      if(pedido.estadoPago == "Señado") {
+        if(pedido.estado == "Pendiente") { // Sumar 1 pedido 1 señado 1 pendiente
+          lista[pedido.nombre][1] += 1;
+          lista[pedido.nombre][2] += 1;
+          lista[pedido.nombre][5] += 1;
+        } else { // Sumar 1 pedido 1 señado 1 listo
+          lista[pedido.nombre][1] += 1;
+          lista[pedido.nombre][2] += 1;
+          lista[pedido.nombre][4] += 1;
+        }
+      } else {
+          if(pedido.estadoPago == "Abonado") {
+            if(pedido.estado == "Pendiente") {
+              lista[pedido.nombre][1] += 1;
+              lista[pedido.nombre][3] += 1;
+              lista[pedido.nombre][5] += 1;
+            } else {
+              lista[pedido.nombre][1] += 1;
+              lista[pedido.nombre][3] += 1;
+              lista[pedido.nombre][4] += 1;
+            }   
+          }
+      } else { // Es no abonado
+        if(pedido.estado == "Pendiente") {
+          lista[pedido.nombre][1] += 1;
+          lista[pedido.nombre][5] += 1;
+        } else { // no señado no abonado pero listo por alguna extraña razón
+          lista[pedido.nombre][1] += 1;
+          lista[pedido.nombre][4] += 1;
+        }
+      }
+    }
+});
+
+
+
+// let nuevo = [nombre, pedidos, señados, abonados, hechos(listo), restantes(pendiente)]
+if(pedido.estadoPago == "Señado") {
+  if(pedido.estado == "Pendiente") {
+    let nuevo = [pedido.nombre, 1, 1, 0, 0, 1];
+  } else {
+    let nuevo = [pedido.nombre, 1, 1, 0, 1, 0];
+  }
+} else {
+    if(pedido.estadoPago == "Abonado") {
+      if(pedido.estado == "Pendiente") {
+        let nuevo = [pedido.nombre, 1, 0, 1, 0, 1];
+      } else {
+        let nuevo = [pedido.nombre, 1, 0, 1, 1, 0];
+      }   
+    }
+} else { // Es no abonado
+  if(pedido.estado == "Pendiente") {
+    let nuevo = [pedido.nombre, 1, 0, 0, 0, 1];
+  } else {
+    let nuevo = [pedido.nombre, 1, 0, 0, 1, 0]; // no señado no abonado pero listo por alguna extraña razón
+  }
+}
+
+
+// let nuevo = [nombre 0, pedidos 1, señados 2, abonados 3, hechos(listo) 4, restantes(pendiente) 5]
+// Sumar nuevas entradas 
+if(pedido.estadoPago == "Señado") {
+  if(pedido.estado == "Pendiente") { // Sumar 1 pedido 1 señado 1 pendiente
+    lista[pedido.nombre][1] += 1;
+    lista[pedido.nombre][2] += 1;
+    lista[pedido.nombre][5] += 1;
+  } else { // Sumar 1 pedido 1 señado 1 listo
+    lista[pedido.nombre][1] += 1;
+    lista[pedido.nombre][2] += 1;
+    lista[pedido.nombre][4] += 1;
+  }
+} else {
+    if(pedido.estadoPago == "Abonado") {
+      if(pedido.estado == "Pendiente") {
+        lista[pedido.nombre][1] += 1;
+        lista[pedido.nombre][3] += 1;
+        lista[pedido.nombre][5] += 1;
+      } else {
+        lista[pedido.nombre][1] += 1;
+        lista[pedido.nombre][3] += 1;
+        lista[pedido.nombre][4] += 1;
+      }   
+    }
+} else { // Es no abonado
+  if(pedido.estado == "Pendiente") {
+    lista[pedido.nombre][1] += 1;
+    lista[pedido.nombre][5] += 1;
+  } else { // no señado no abonado pero listo por alguna extraña razón
+    lista[pedido.nombre][1] += 1;
+    lista[pedido.nombre][4] += 1;
+  }
+}

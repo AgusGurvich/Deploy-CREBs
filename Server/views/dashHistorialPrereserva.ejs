@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CREB's</title>
+    <script src="https://kit.fontawesome.com/5dd57f835c.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/tablaprereserva.css">
+</head>
+<body>
+    
+    <div id="top__of-page">
+        <header>
+            <a href="/inicio"><div id="img_top"><img src="IMG-20231211-WA0080.jpg"></div></a>
+        </header>
+        <div id="menu-icon"><a href="/login"><i class="fa-solid fa-user"></i></a></div>
+    </div>
+
+    
+    <div id="main">
+        <div id="tabla">
+            <div id="Encabezado">
+                <p class="pestañaEncabezado">Nombre</p>
+                <p class="pestañaEncabezado">Pedidos</p>
+                <p class="pestañaEncabezado">Señados</p>
+                <p class="pestañaEncabezado">Abonados</p>
+                <p class="pestañaEncabezado">Hechos</p>
+                <p class="pestañaEncabezado">Pendientes</p>
+                <p class="pestañaEncabezado">Agregar</p>
+                <p class="pestañaEncabezado">Boton</p>
+            </div>
+            <div id="entradas">
+                <% let lista = []; %>
+                <% pedidos.forEach(pedido => { %>
+                    <% let encontrado = lista.findIndex(item => item[0] === pedido.nombre); %>
+                    <% if (encontrado === -1) { %>
+                        <% let nuevo; %>
+                        <% if(pedido.estadoPago == "Señado") { %>
+                            <% if(pedido.estado == "Pendiente") { %>
+                                <% nuevo = [pedido.nombre, 1, 1, 0, 0, 1]; %> <!-- Entrada -->
+                            <% } else { %>
+                                <% nuevo = [pedido.nombre, 1, 1, 0, 1, 0]; %> <!-- Entrada -->
+                            <% } %>
+                        <% } else if(pedido.estadoPago == "Abonado") { %>
+                            <% if(pedido.estado == "Pendiente") { %>
+                                <% nuevo = [pedido.nombre, 1, 0, 1, 0, 1]; %> <!-- Entrada -->
+                            <% } else { %>
+                                <% nuevo = [pedido.nombre, 1, 0, 1, 1, 0]; %> <!-- Entrada -->
+                            <% } %>
+                        <% } else { %> <!-- Es no abonado -->
+                            <% if(pedido.estado == "Pendiente") { %>
+                                <% nuevo = [pedido.nombre, 1, 0, 0, 0, 1]; %> <!-- Entrada -->
+                            <% } else { %>
+                                <% nuevo = [pedido.nombre, 1, 0, 0, 1, 0]; %> <!-- no señado no abonado pero listo por alguna extraña razón -->
+                            <% } %>
+                        <% } %>
+                        <% lista.push(nuevo); %>
+                    <% } else { %> <!-- El elemento ya está en la lista -> Sumar valores a la entrada de la lista -->
+                        <% if(pedido.estadoPago == "Señado") { %>
+                            <% if(pedido.estado == "Pendiente") { %> <!-- Sumar 1 pedido 1 señado 1 pendiente -->
+                                <% lista[encontrado][1] += 1; %>
+                                <% lista[encontrado][2] += 1; %>
+                                <% lista[encontrado][5] += 1; %>
+                            <% } else { %> <!-- Sumar 1 pedido 1 señado 1 listo -->
+                                <% lista[encontrado][1] += 1; %>
+                                <% lista[encontrado][2] += 1; %>
+                                <% lista[encontrado][4] += 1; %>
+                            <% } %>
+                        <% } else if(pedido.estadoPago == "Abonado") { %>
+                            <% if(pedido.estado == "Pendiente") { %>
+                                <% lista[encontrado][1] += 1; %>
+                                <% lista[encontrado][3] += 1; %>
+                                <% lista[encontrado][5] += 1; %>
+                            <% } else { %>
+                                <% lista[encontrado][1] += 1; %>
+                                <% lista[encontrado][3] += 1; %>
+                                <% lista[encontrado][4] += 1; %>
+                            <% } %>
+                        <% } else { %> <!-- Es no abonado -->
+                            <% if(pedido.estado == "Pendiente") { %>
+                                <% lista[encontrado][1] += 1; %>
+                                <% lista[encontrado][5] += 1; %>
+                            <% } else { %> <!-- no señado no abonado pero listo por alguna extraña razón -->
+                                <% lista[encontrado][1] += 1; %>
+                                <% lista[encontrado][4] += 1; %>
+                            <% } %>
+                        <% } %>
+                    <% } %>
+                <% }); %>
+                
+
+                <%let duracion = lista.length%>
+                <% for(let i = 0; i< duracion; i++) {%>
+                    <form class="entrada" action="/marcarHechos" method="post" >
+                        <input type="text" name="nombre" id="nombre" value="<%=lista[i][0]%>" placeholder="<%lista[i][0]%>" readonly onmousedown="return false;" />
+                        <input type="number" name="total" id="total" value="<%=lista[i][1]%>" readonly onmousedown="return false;" />
+                        <input type="number" name="señados" id="señados" value="<%=lista[i][2]%>" readonly onmousedown="return false;" />
+                        <input type="number" name="abonados" id="abonados" value="<%=lista[i][3]%>" readonly onmousedown="return false;" />
+                        <input type="number" name="hechos" id="hechos" value="<%=lista[i][4]%>" readonly onmousedown="return false;" />
+                        <input type="number" name="pendientes" id="pendientes" value="<%=lista[i][5]%>" readonly onmousedown="return false;" />
+                        <input required type="number" id="agregar" name="agregar" value="0" max="<%=lista[i][5]%>" min="0" placeholder="Agregar Pedidos realizados">
+                        <input type="submit" class="boton" value="Agregar">
+                    </form>                    
+                <%}%>
+            </div>  
+        </div>
+
+
+
+
+
+
+        <div id="selector">
+            <p class="pestaña">Pedidos</p>
+            <p class="pestaña">Señado</p>
+            <p class="pestaña">Abonado</p>
+        </div>
+
+        <div id="contenedor_historial">
+
+            <div id="historial_cabeza">
+                <p id="numero">Número de Pedido</p>
+                <p>Número de Copias</p>
+                <p>Archivo</p>
+                <p>Precio</p>
+            </div>
+
+            <div id="historial_cuerpo">
+                <% pedidos.forEach((pedido) => { %>
+                    
+                    <div class="historial_entrada  <%= pedido.tipo_impresion %> <%= pedido.estadoPago %>">
+
+                        <p class="pedido_id"><%= pedido.id %></p>
+                        <p><%= pedido.copias %> copias</p>
+                        <% if(pedido.nombre_archivo) {%>
+                            <p><a class="nombre_archivo" href="/download/<%=pedido.nombre_archivo%>" target="_blank"><%= pedido.nombre %></a></p>
+                        <%} else {%>
+                            <p><a class="nombre_archivo" href="<%=pedido.link%>" target="_blank"><%= pedido.nombre %></a></p>
+                        <%}%>
+
+                        <p><%= pedido.precio %></p>     
+                        
+                        <div class="pedido_masinfo">
+                            <p><a class="ID" href="/Dashpedido/<%= pedido.id%>" target="_blank">Más Opciones</a></p>
+                            <p><%= pedido.tipo_impresion %> Faz</p>
+                            <p><b class="estado"><%= pedido.estado %></b></p>
+                            <p><b class="estadoPago"><%= pedido.estadoPago %></b></p>
+                        </div>
+
+                    </div>                
+            
+                <% })%>
+            
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+const estado = document.querySelectorAll('.estado');
+const estadoPago = document.querySelectorAll('.estadoPago');
+const archivos = document.querySelectorAll('.nombre_archivo');
+const selecciones = document.querySelectorAll('.pestaña');
+const entradas = document.querySelectorAll(".historial_entrada");
+
+archivos.forEach( archivo => {
+    archivo.onclick = (e) => {   
+        e.target.style.cssText = 'background-color: var(--Blue); color: var(--fondo);'
+
+    }
+})
+  
+estadoPago.forEach(estado => {
+    if(estado.textContent == 'No abonado') {
+            estado.style.cssText = "background-color: var(--red);";
+    }
+if(estado.textContent == 'Abonado') {
+    estado.style.cssText = "background-color: var(--Verde);";
+}
+});
+
+estado.forEach(estado => {
+
+if(estado.textContent == 'Pendiente') {
+    estado.style.cssText = "background-color: var(--red);";
+    console.log("funciona");
+}
+if(estado.textContent == 'Listo') {
+    estado.style.cssText = "background-color: var(--thirdty);";
+}
+});
+
+selecciones.forEach(selector => {
+    if(selector.textContent == 'Prereserva') { // caso Prereserva donde filtramos por faz (tipo_impresion en sql)
+        selector.addEventListener('mouseover', ()=> {
+            entradas.forEach( entrada => {
+                if(!entrada.classList.contains('Pre')) {     
+                    entrada.style.display = "none";
+                }
+                else {
+                    entrada.style.display = "flex";
+                }
+            });
+        });
+    } else { // caso pendientes y listos donde filtramos por estado
+
+        if(selector.textContent == 'No abonado') { // Manejo de no abonados
+        selector.addEventListener('mouseover', ()=> {
+            entradas.forEach( entrada => {
+                if(!entrada.classList.contains('abonado')) {     
+                    entrada.style.display = "none";
+                }
+                else {
+                    entrada.style.display = "flex";
+                }
+            });
+        });
+
+         } else { 
+
+                if(selector.textContent == 'Prereserva Señado') { // Manejo de pre reserva señados
+                selector.addEventListener('mouseover', ()=> {
+                entradas.forEach( entrada => {
+                    if(entrada.classList.contains('Pre') && entrada.classList.contains('Señado')) {     
+                        entrada.style.display = "flex";
+                    }
+                    else {
+                        entrada.style.display = "none";
+                    }
+                });
+            });
+                } else { 
+                        selector.addEventListener('mouseover', ()=> {
+                        entradas.forEach( entrada => {
+                            if(!entrada.classList.contains(selector.textContent)) {     
+                                entrada.style.display = "none";
+                            }
+                            else {
+                                entrada.style.display = "flex";
+                            }
+                        });
+                    });
+                }
+    }
+ 
+ }
+
+
+
+
+            
+});
+
+    </script>
+
+</body>
+</html>

@@ -14,10 +14,87 @@ router.get("/seleccion", (req,res)=> {
     res.render('seleccion');
 });
 
+
 router.get("/dashboard",  auth.isLoggedIn, auth.isBecario , async (req,res)=> {
     
     res.render('dashboard');
 });
+
+router.get("/prereservaDashboard",  auth.isLoggedIn, auth.isBecario , async (req,res)=> {
+    const prereservaQuery = 'SELECT * FROM prereserva ORDER BY id';
+    const result = await pool.query(prereservaQuery);
+    let prereserva = result[0];
+    res.render('prereservaDashboard', {
+        prereserva : prereserva
+    });
+});
+
+router.get("/agregar/:id",  auth.isLoggedIn, auth.isBecario , async (req,res) => {
+    const { id } = req.params;
+    console.log(id);
+
+        const prereservaQuery = 'SELECT * FROM prereserva WHERE id = ?';
+        const result = await pool.query(prereservaQuery, [id]);
+        let prereserva = result[0];    
+        res.render('prereservaModificar', {
+            prereserva : prereserva
+        });
+});
+
+router.post("/agregarPrereserva", auth.isLoggedIn, auth.isBecario , async (req,res) => {
+    const { nombre , precio, año } = req.body;
+    const insertQuery = 'INSERT INTO prereserva (nombre, precio, año) VALUES (?, ?, ?);';
+    await pool.query(insertQuery, [nombre, precio, año]);
+    res.redirect("/dashboard");
+});
+
+router.post("/modificarPrereserva", auth.isLoggedIn, auth.isBecario , async (req,res) => {
+    const { nombre , precio, año, id} = req.body;
+    const modifyQuery = 'UPDATE prereserva SET año = ?, nombre = ?, precio = ? WHERE id = ?;';
+    await pool.query(modifyQuery, [año, nombre, precio, id]);
+    res.redirect("/dashboard");
+});
+
+router.delete("/prereserva/eliminar/:id", auth.isLoggedIn, auth.isBecario , async (req,res) => {
+        const { id } = req.params;    
+        const deleteQuery = 'DELETE FROM prereserva WHERE id = ?;';
+        await pool.query(deleteQuery, [id]);
+    res.redirect("/dashboard");
+});
+
+
+router.get("/pedidosPrereserva", auth.isLoggedIn, auth.isBecario , async (req,res)=> {
+    const result = await pool.query('SELECT * FROM pedidos WHERE tipo_impresion = "Pre" ORDER BY id DESC');
+    let pedidos = result[0];
+    res.render('dashHistorialPrereserva', {
+        pedidos : pedidos
+    }); 
+}) 
+
+router.post("/marcarHechos", auth.isLoggedIn, auth.isBecario , async (req,res)=> {
+     const { nombre , agregar } = req.body;
+     const  Query = 'SELECT * FROM pedidos WHERE tipo_impresion = "Pre" AND nombre = ? ORDER BY id DESC';
+     const result = await pool.query(Query, nombre);
+     let pedidos = result[0];
+     let contador = 0;
+     for(let i=0; i<pedidos.length; i++) {
+        if(pedidos[i].estado == "Pendiente") {
+            const updateQuery = 'UPDATE Pedidos SET estado = "Listo" WHERE id = ?'
+            const id = pedidos[i].id;
+            const result = await pool.query(updateQuery, id);
+            contador += 1;
+            console.log(contador);
+            console.log(pedidos[i].estado);
+            console.log("llega aca");
+        }
+        if(contador == agregar) {
+            break;
+        }
+     }
+     console.log(pedidos);
+     res.redirect("/pedidosPrereserva");
+}) 
+
 
 
 router.get("/historial_pendientes", auth.isLoggedIn, auth.isBecario , async (req,res)=> {
@@ -25,7 +102,7 @@ router.get("/historial_pendientes", auth.isLoggedIn, auth.isBecario , async (req
     let pedidos = result[0];
     res.render('dashHistorial', {
         pedidos : pedidos
-    });
+    }); 
 }) 
 
 router.get("/usuario/historial/:id", auth.isLoggedIn, auth.isBecario , async (req,res)=> {
@@ -44,7 +121,6 @@ router.get("/cargar_cuenta",  auth.isLoggedIn, auth.isBecario , (req,res)=> {
 })
 
 router.get("/historial_general", async (req,res)=> {
-
     const result = await pool.query('SELECT  * FROM pedidos ORDER BY id DESC');
     let pedidos = result[0];
     res.render('dashHistorial', {

@@ -138,8 +138,45 @@ header h1 {
     display: flex;
     justify-content: center;
     align-items: center;
-
+    flex-wrap: wrap;
 }
+
+
+#selector {
+    /* border: 1px solid black; */
+    background-color: var(--lightBlue);
+    border-bottom: 2px solid var(--thirdty);
+    box-sizing: border-box;
+    width: 96%;
+    height: 50px;
+
+    margin: 1%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    overflow: hidden;
+}
+
+    .pestaña {
+        /* border: 1px solid black; */
+        box-sizing: border-box;
+        width: 100%;
+        height: 100%;
+        color: var(--fondo);
+        font-family: notosans;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 200ms;
+        overflow: hidden;
+    }
+
+    .pestaña:hover {
+        border-bottom: 2px solid var(--thirdty);
+        color: var(--thirdty);
+    }
+
 
 #contenedor_historial {
     /* border: 1px solid black; */

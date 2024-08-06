@@ -137,11 +137,12 @@ header h1 {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
 
 }
 
 #contenedor_historial {
-    /* border: 1px solid black; */
+    border: 1px solid black;
     border-radius: 4px;
     background-color: var(--lightBlue);
 

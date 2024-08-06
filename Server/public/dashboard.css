@@ -4,7 +4,7 @@
     --lightBlue: #009ece;
     --Blue: #265DA6;
     --thirdty: #ee6725;
-
+    --rosa: #AA13B4;
 }
 
 * {
@@ -341,6 +341,10 @@ header h1 {
 
     .main__utility i {
 overflow: hidden;
+    }
+
+    .prereserva {
+        background-color: var(--rosa);
     }
 
     .white p {
