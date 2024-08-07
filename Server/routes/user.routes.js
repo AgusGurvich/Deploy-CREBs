@@ -186,32 +186,39 @@ router.get("/pedido/:id", auth.isLoggedIn, auth.isUser , async (req, res)=> {
     const selectQuery = 'SELECT * FROM pedidos WHERE id = ?';
     const result = await pool.query(selectQuery, [id]);
     const pedido = result[0][0];
-    const user_id = result[0][0].user_id;
-    const userQuery = 'SELECT nombre, saldo FROM users WHERE id = ?';
-    const user = await pool.query(userQuery, [user_id]);
-    const UserInformation = user[0][0];
-
-    res.render('userHistorialUnidad', {
-        pedido : pedido,
-        user : UserInformation
-    })
+    if(pedido == undefined) {
+        res.redirect("/inicio");
+    } else {
+        const user_id = result[0][0].user_id;
+        const userQuery = 'SELECT nombre, saldo FROM users WHERE id = ?';
+        const user = await pool.query(userQuery, [user_id]);
+        const UserInformation = user[0][0];
+    
+        res.render('userHistorialUnidad', {
+            pedido : pedido,
+            user : UserInformation
+        })
+    }
 }); 
 
 router.get("/pedidoInformation/:id", auth.isLoggedIn , async (req, res)=> {
     const pedidoID = req.params.id;
     const precioQuery = 'SELECT precio, estadoPago, user_id FROM pedidos WHERE id = ?';
     const pedidoResult = await pool.query(precioQuery, [pedidoID]);
-    const userID = pedidoResult[0][0].user_id;
-
-    const saldoQuery = 'SELECT saldo FROM users Where id = ?';
-    const userResult = await pool.query(saldoQuery, [userID]);
-     
-    const information = {
-        precio : pedidoResult[0][0].precio,
-        estadoPago: pedidoResult[0][0].estadoPago,
-        saldo : userResult[0][0].saldo
+    if(pedidoResult[0][0] == undefined) {
+        res.redirect("/inicio");
+    } else {
+        const userID = pedidoResult[0][0].user_id;
+        const saldoQuery = 'SELECT saldo FROM users Where id = ?';
+        const userResult = await pool.query(saldoQuery, [userID]);         
+        const information = {
+            precio : pedidoResult[0][0].precio,
+            estadoPago: pedidoResult[0][0].estadoPago,
+            saldo : userResult[0][0].saldo
+        }
+        res.send(information);
+    
     }
-    res.send(information);
 });
 
 
