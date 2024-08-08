@@ -80,7 +80,7 @@ router.post("/marcarHechos", auth.isLoggedIn, auth.isBecario , async (req,res)=>
      let contador = 0;
      for(let i=0; i<pedidos.length; i++) {
         if(pedidos[i].estado == "Pendiente") {
-            const updateQuery = 'UPDATE Pedidos SET estado = "Listo" WHERE id = ?'
+            const updateQuery = 'UPDATE pedidos SET estado = "Listo" WHERE id = ?'
             const id = pedidos[i].id;
             const result = await pool.query(updateQuery, id);
             contador += 1;
