@@ -24,7 +24,7 @@
             <div class="form signinForm">
                 <form id="loggearUsuario" method="post">
                     <h3>Sign In</h3>
-                    <input type="number" name="username" id="username" placeholder="Inserte su DNI" required>
+                    <input type="number" name="username" id="username" placeholder="Inserte su DNI" max="99999999" min="00000000" required>
                     <input type="password" name="password" id="password" placeholder="Contraseña" required>
                     <input type="submit" value="Login">
                     <!-- <a href="/seleccion" class="forgot">Olvidaste tu Contraseña?</a> -->
@@ -38,9 +38,9 @@
                     <input type="email" name="email" id="email" placeholder="Mail" required>
                     <input type="password" name="password" id="password" placeholder="Contraseña" required>
                     <input type="password" name="confirm" id="confirm" placeholder="Confirmar Contraseña" required>
-                    <input type="number" name="DNI" id="DNI" placeholder="DNI" required>
+                    <input type="number" name="DNI" id="DNI" placeholder="DNI" max="99999999" minlength="00000000" required>
                     <input type="submit" value="Crea una Cuenta">
-                </form>
+                </form> 
             </div>
         </div>
     </div>

@@ -155,10 +155,14 @@ router.get("/usuario/:DNI", auth.isLoggedIn, auth.isBecario ,  async (req, res) 
     const results = await pool.query(selectQuery, [DNI]);
 
     const usuario = results[0][0];
+    if(usuario != undefined) {
+        res.render("usuario", {
+            usuario : usuario
+        });
+    } else {
+        res.redirect("/dashboard");
+    }
     
-    res.render("usuario", {
-        usuario : usuario
-    });
 })
 
 router.get("/IngresarPedido", auth.isLoggedIn, auth.isBecario , (req,res)=> {
@@ -432,7 +436,7 @@ router.put('/Dashpedido/dash/pagarPedido/:id', auth.isLoggedIn , async (req, res
     }
 
     const redirectURL = `/Dashpedido/${id}`;
-    res.send(200);
+    res.sendStatus(200);
 });
 
 
