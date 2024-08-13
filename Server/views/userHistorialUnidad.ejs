@@ -92,7 +92,7 @@
                 <p><%= pedido.descripción %></p>
             </div>
             <div class="pedido_section">
-                <b>Precio / Faltante</b>
+                <b>Precio</b>
                 <p id="precio">$ <%= pedido.precio %></p>
             </div>
             <div class="pedido_section">
@@ -175,15 +175,17 @@
     // Conseguir dato saldo y Precio
         const pedidoID = document.getElementById('pedidoID').textContent;
         const informationQuery = `/pedidoInformation/${pedidoID}`;
-      
+        
        
         fetch(informationQuery)
         .then((resp) => resp.json())
         .then(function(data) {
             const precio = data.precio;
             const saldo = data.saldo;
+            const ingresado = data.ingresado;
+            console.log(ingresado);
             const estado_pago = data.estadoPago;
-            console.log('Estado del pedido y el saldo');
+
             const payButton = document.getElementById('Pagar');
             const reserveButton = document.getElementById('reserveButton');
             const open = document.getElementById('open');
@@ -196,31 +198,41 @@
                 open.style.cssText = "background-color: var(--thirdty);";
                 habilitarVentana(flotante, ventana_pago, open, close);
                 pagarTotal(payButton, reserveButton, precio, pedidoID);
-            }
-                else {
-                    open.textContent = "Saldo Insuficiente";
-                    open.style.cssText = "background-color: var(--text);";
-                    open.onclick = e => {open.style.cssText = "background-color: var(--thirdty);";}
+            
+            } else {
+                    if(saldo >= (precio/2)) {
+                        reserveButton.textContent = 'Señar';
+                        payButton.style.cssText = 'display: none;';
+                        open.textContent = "Pagar solo Seña";
+                        open.style.cssText = "background-color: var(--yellow);";
+                        habilitarVentana(flotante, ventana_pago, open, close);
+                        pagarSoloSeña(payButton, reserveButton, precio, pedidoID);
+                    } else {
+                        open.textContent = "Saldo Insuficiente";
+                        open.style.cssText = "background-color: var(--text);";
+                        open.onclick = e => {open.style.cssText = "background-color: var(--thirdty); transition: all 500ms;";}
                     
-                    pagarTotal(payButton, reserveButton, precio, pedidoID);
+                    }
+
                 }
             }
 
             if(estado_pago == 'Señado') {
                 reserveButton.textContent = 'Completar Seña';
-                if(saldo >= precio) {
+                if(saldo >= (precio-ingresado)) {
                 open.textContent = "Abonar Virtual";
-                open.style.cssText = "background-color: var(--thirdty);";
+                open.style.cssText = "background-color: var(--yellow);";
                 habilitarVentana(flotante, ventana_pago, open, close);
                 pagarSeñado(payButton, reserveButton, precio, pedidoID);
-            }
-                else {
+                    
+            } else {
                     open.textContent = "Saldo Insuficiente";
                     open.style.cssText = "background-color: var(--text);";
-                    // open.onclick = e => {open.style.cssText = "background-color: var(--thirdty);";}
-                    habilitarVentana(flotante, ventana_pago, open, close);
-                    pagarSeñado(payButton, reserveButton, precio, pedidoID);
+                    open.onclick = e => {open.style.cssText = "background-color: var(--thirdty); transition: all 500ms;";}
+                    // habilitarVentana(flotante, ventana_pago, open, close);
+                    // pagarSeñado(payButton, reserveButton, precio, pedidoID);
                 }
+                
             }
         
             if(estado_pago == 'Abonado') {
@@ -253,6 +265,21 @@
                 console.log(formData);
                 window.location.href = `/pedido/${id}`;
             }
+          }
+
+          function pagarSoloSeña (payButton, reserveButton, precio, id) {
+            
+            reserveButton.onclick = async (e) => {
+                const señarURL = `/senarPedido/${id}`;
+                let formData = new FormData();
+                formData.append("estado", 'seña');
+                let response = await fetch(señarURL, {
+                    method: 'PUT',
+                    body: formData
+                });
+                console.log(formData);
+                window.location.href = `/pedido/${id}`;
+                }
           }
 
           function pagarSeñado (payButton, reserveButton, precio, id) {

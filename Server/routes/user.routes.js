@@ -203,7 +203,7 @@ router.get("/pedido/:id", auth.isLoggedIn, auth.isUser , async (req, res)=> {
 
 router.get("/pedidoInformation/:id", auth.isLoggedIn , async (req, res)=> {
     const pedidoID = req.params.id;
-    const precioQuery = 'SELECT precio, estadoPago, user_id FROM pedidos WHERE id = ?';
+    const precioQuery = 'SELECT precio, estadoPago, user_id, ingresado FROM pedidos WHERE id = ?';
     const pedidoResult = await pool.query(precioQuery, [pedidoID]);
     if(pedidoResult[0][0] == undefined) {
         res.redirect("/inicio");
@@ -214,7 +214,8 @@ router.get("/pedidoInformation/:id", auth.isLoggedIn , async (req, res)=> {
         const information = {
             precio : pedidoResult[0][0].precio,
             estadoPago: pedidoResult[0][0].estadoPago,
-            saldo : userResult[0][0].saldo
+            saldo : userResult[0][0].saldo,
+            ingresado : pedidoResult[0][0].ingresado
         }
         res.send(information);
     
@@ -228,6 +229,7 @@ router.put('/senarPedido/:id', auth.isLoggedIn , auth.isUser,  async (req, res) 
       const redirecTURL =  `/pedido/${id}`;
       const precioQuery = 'SELECT precio, user_id, ingresado FROM pedidos WHERE id = ?';
       const pedidoResult = await pool.query(precioQuery, [id]);
+      
       const { ingresado, precio, user_id} = pedidoResult[0][0];
       const saldoQuery = 'SELECT saldo FROM users WHERE id = ?';
       const userResult = await pool.query(saldoQuery, [user_id]);
