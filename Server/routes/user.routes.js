@@ -169,7 +169,7 @@ router.get("/cargar_saldo", auth.isLoggedIn, auth.isUser , (req,res)=> {
     res.render('cargar_saldo');
 })
 
-router.get("/historial", async (req,res)=> {
+router.get("/historial",  auth.isLoggedIn, auth.isUser,  async (req,res)=> {
     const id = req.user.id; 
     const pedidosQuery = 'SELECT * FROM pedidos WHERE user_id = ? ORDER BY id DESC';
     const result = await pool.query(pedidosQuery, [id]);
@@ -291,7 +291,7 @@ router.put('/pagarPedido/:id', auth.isLoggedIn ,auth.isUser , async (req, res) =
     }
 
     const redirectURL = `/Dashpedido/${id}`;
-    res.send(200);
+    res.sendStatus(200);
 });
 
 router.get("/cuenta", (req,res) => {
