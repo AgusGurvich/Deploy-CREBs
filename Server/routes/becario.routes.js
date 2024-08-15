@@ -78,22 +78,24 @@ router.post("/marcarHechos", auth.isLoggedIn, auth.isBecario , async (req,res)=>
      const result = await pool.query(Query, nombre);
      let pedidos = result[0];
      let contador = 0;
-     for(let i=0; i<pedidos.length; i++) {
-        if(pedidos[i].estado == "Pendiente") {
-            const updateQuery = 'UPDATE pedidos SET estado = "Listo" WHERE id = ?'
-            const id = pedidos[i].id;
-            const result = await pool.query(updateQuery, id);
-            contador += 1;
-            console.log(contador);
-            console.log(pedidos[i].estado);
-            console.log("llega aca");
-        }
-        if(contador == agregar) {
-            break;
-        }
-     }
-     console.log(pedidos);
-     res.redirect("/pedidosPrereserva");
+    if(agregar == 0) {
+        res.redirect("/pedidosPrereserva");   
+    } else {
+        for(let i=0; i<pedidos.length; i++) {
+            if(pedidos[i].estado == "Pendiente") {
+                const updateQuery = 'UPDATE pedidos SET estado = "Listo" WHERE id = ?'
+                const id = pedidos[i].id;
+                const result = await pool.query(updateQuery, id);
+                contador += 1;
+            }
+            if(contador == agregar) {
+                break;
+            }
+         }
+         console.log(pedidos);
+         res.redirect("/pedidosPrereserva");
+    }
+     
 }) 
 
 
