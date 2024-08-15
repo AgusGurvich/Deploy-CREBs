@@ -77,24 +77,43 @@ router.post("/marcarHechos", auth.isLoggedIn, auth.isBecario , async (req,res)=>
      const  Query = 'SELECT * FROM pedidos WHERE tipo_impresion = "Pre" AND nombre = ? ORDER BY id DESC';
      const result = await pool.query(Query, nombre);
      let pedidos = result[0];
-     let contador = 0;
-    if(agregar == 0) {
-        res.redirect("/pedidosPrereserva");   
-    } else {
+
+    if(agregar < 0) {
+        let cantidad = Math.abs(agregar);
+        let contador = 0;
         for(let i=0; i<pedidos.length; i++) {
-            if(pedidos[i].estado == "Pendiente") {
-                const updateQuery = 'UPDATE pedidos SET estado = "Listo" WHERE id = ?'
+            if(pedidos[i].estado == "Listo") {
+                const updateQuery = 'UPDATE pedidos SET estado = "Pendiente" WHERE id = ?'
                 const id = pedidos[i].id;
                 const result = await pool.query(updateQuery, id);
                 contador += 1;
             }
-            if(contador == agregar) {
+            if(contador == cantidad) {
                 break;
             }
          }
-         console.log(pedidos);
          res.redirect("/pedidosPrereserva");
+    } else {
+        if(agregar == 0) {
+            res.redirect("/pedidosPrereserva");   
+        } else {
+            let contador = 0;
+            for(let i=0; i<pedidos.length; i++) {
+                if(pedidos[i].estado == "Pendiente") {
+                    const updateQuery = 'UPDATE pedidos SET estado = "Listo" WHERE id = ?'
+                    const id = pedidos[i].id;
+                    const result = await pool.query(updateQuery, id);
+                    contador += 1;
+                }
+                if(contador == agregar) {
+                    break;
+                }
+             }
+             console.log(pedidos);
+             res.redirect("/pedidosPrereserva");
+        }
     }
+    
      
 }) 
 
