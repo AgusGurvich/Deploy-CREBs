@@ -162,6 +162,7 @@ header h1 {
             align-items: center;
             flex-wrap: nowrap;
             overflow: hidden;
+    
         }
 
             .pestañaEncabezado {
@@ -185,8 +186,8 @@ header h1 {
 
             .entrada {
                 width: 100%;
-
                 display: flex;
+                justify-content: space-around;
                 flex-wrap: nowrap;
             }
 
@@ -194,7 +195,7 @@ header h1 {
                 text-decoration: none;
                 border: none;
                 border: 1px solid var(--thirdty);
-                background-color: var(--Blue)
+                background-color: var(--Blue);
                 width: 100%;
                 display: flex;
                 justify-content: center;

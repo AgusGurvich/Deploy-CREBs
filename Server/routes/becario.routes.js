@@ -273,18 +273,34 @@ router.get("/Dashpedido/:id", auth.isLoggedIn, auth.isBecario , async (req, res)
     const selectQuery = 'SELECT * FROM pedidos WHERE id = ?';
     const result = await pool.query(selectQuery, [id]);
     const pedido = result[0][0];
-    const user_id = result[0][0].user_id;
-    console.log(user_id);
-    const userQuery = 'SELECT * FROM users WHERE id = ?';
-    const user = await pool.query(userQuery, [user_id]);
-    const UserInformation = user[0][0];
- 
-    res.render('dashHistorialUnidad', {
-        pedido : pedido,
-        user : UserInformation
-    })
+    if(pedido != undefined) {
+        const user_id = result[0][0].user_id;
+        const userQuery = 'SELECT * FROM users WHERE id = ?';
+        const user = await pool.query(userQuery, [user_id]);
+        const UserInformation = user[0][0];
+     
+        res.render('dashHistorialUnidad', {
+            pedido : pedido,
+            user : UserInformation
+        });
+    } else {
+        res.redirect("/historial_pendientes");
+    }
+
 
 });
+
+
+router.delete('/Dashpedido/dash/eliminarPedido/:id', async (req,res) => {
+    // Id del pedido
+    const { id } = req.params;
+    const deleteQuery = 'DELETE from pedidos WHERE ID = ?';
+    const result = await pool.query(deleteQuery, [id]);
+    const resultado = result[0][0];
+    const redirectURL = `/historial_pendientes`;
+    res.redirect(redirectURL);
+});
+
 
 router.put('/pedido/changeEstado/:id', async (req,res) => {
     const { id } = req.params;

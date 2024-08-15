@@ -127,6 +127,10 @@
                     <button class="open" id="openPagar">Pago Virtual</button>
                 </div>
             </div>
+            <div class="pedido_section">
+                <b>Eliminar Pedido</b>
+                    <p class="estadoPago" id="eliminarPedido">Eliminar</p>
+            </div>
 
         </div>
     </div>
@@ -146,7 +150,9 @@
         const nuevoPrecio = document.getElementById('nuevoPrecio');
         //DEFINIR ID DEL PEDIDO
         const pedidoID = document.getElementById('pedidoID').textContent;
-
+        //BOTON DE ELIMINAR PEDIDO
+        const eliminarBoton = document.getElementById('eliminarPedido');
+        
     //Configuraciones de Colores bandera
         btnDescarga.onclick = (e) => {
             e.target.style.cssText = 'background-color: var(--lightBlue); color: var(--fondo);'
@@ -186,9 +192,6 @@
         window.location.href = `/Dashpedido/${pedidoID}`;
     }
 
-    //Configuracion de Cambiar Precio
-   
-
     //Configuracion de Boton Pagar        
         const informationQuery = `/pedidoInformation/${pedidoID}`;
       
@@ -199,7 +202,6 @@
             const precio = data.precio;
             const saldo = data.saldo;
             const estado_pago = data.estadoPago;
-            console.log('Estado del pedido y el saldo');
             const payButton = document.getElementById('Pagar');
             const reserveButton = document.getElementById('reserveButton');
             //Definiciones de ventana de pago
@@ -312,8 +314,7 @@
             closeButton.onclick = (e) => {
                 flotante.classList.remove('show');
                 ventana_pago.classList.remove('show');
-                console.log('habilitando button close');
-                console.log('removiendo');
+                
             }
 
           }
@@ -323,7 +324,7 @@
             e.preventDefault();
            
             const newPrice = nuevoPrecio.value;
-            console.log(newPrice);
+            
             const changeURL = `/pedido/changePrecio/${pedidoID}/${newPrice}`;
                  console.log('lo mando por aca');
                 let formData = new FormData(form);
@@ -334,17 +335,28 @@
                 console.log(formData);
                 window.location.href = `/Dashpedido/${pedidoID}`;
         };
-
-
-
         });
-
-        
-        console.log('chau');
-      
-
     
-
+        // Manejar Botón de Eliminar Pedido
+        eliminarBoton.style.cssText = "background-color: var(--lightBlue);"
+        eliminarBoton.addEventListener("mouseover", ()=> {
+            eliminarBoton.style.cssText = "background-color: var(--red); font-family: notosans; font-size: 1.5rem; transition: all 500ms;"
+            console.log(`dash/eliminarPedido/${pedidoID}`);
+        });
+        eliminarBoton.addEventListener("mouseout", ()=> {
+            eliminarBoton.style.cssText = "background-color: var(--lightBlue); transition: all 500ms;"
+        });
+        eliminarBoton.onclick = async (e) => {
+                const eliminarURL = `dash/eliminarPedido/${pedidoID}`;
+                let formData = new FormData();
+                formData.append("pedido", pedidoID);
+                let response = await fetch(eliminarURL, {
+                    method: 'DELETE',
+                    body: formData
+                });
+                console.log(formData);
+                window.location.href = `/historial_pendientes`;
+            }
 
     </script>
 </body>
