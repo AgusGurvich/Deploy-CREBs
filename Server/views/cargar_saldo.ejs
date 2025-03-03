@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fotocopiadora</title>
+    <script src="https://kit.fontawesome.com/5dd57f835c.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="cagarSaldo.css">
+</head>
+<body>
+
+    <div id="top__of-page">
+        <header>
+            <a href="/inicio"><div id="img_top"><img src="IMG-20231211-WA0080.jpg"></div></a>
+        </header>
+        <div id="menu-icon"><a href="/inicio"><i class="fa-solid fa-user"></i></a></div>
+    </div>
+
+    <!-- <% if (typeof messages !== 'undefined' && messages.length > 0) {%>
+        <div class="alert alert-info" id="success_message">
+             <%= messages[0] %> 
+            <i class="fa-solid fa-x"></i>
+        </div>
+    <%}%> -->
+
+    <div id="main">
+        <div id="main_descripcion">
+            <div id="main_text">
+                <p class="renglon">Este formulario sirve para cargar saldo en tu cuenta de CREBs virtualmente con estos pasos:</p>
+                <p class="renglon">- En tu billetera virtual, transferí el dinero que quieras acreditarle a tu cuenta al alias: 'agus.gurvich'</p>
+                <p class="renglon">- Descargá el comprobante para subirlo al formulario</p>
+                <p class="renglon">- Vení de nuevo a este formulario y cargá el monto que tranferís y el archivo del comprobante</p>
+                <p class="renglon">Y listo! Envía el formulario y dentro de las pŕoximas 48 a 72hs se va a estar acreditando el</p>
+                <p class="renglon">saldo correspondiente si todo está en orden.</p>
+                <p class="renglon">Te recomendamos que revises periódicamente tu saldo para estar segurx!</p>  
+            </div>
+        </div>
+
+        <form action="/cargar" id="formulario" method="post" enctype="multipart/form-data">
+            <div class="input">
+                <input type="number" name="monto" id="monto" placeholder="Monto a acreditar"required>
+            </div>
+            <div class="input">
+                <input type="file" class='fancy-file' id="file"  name="archivo" accept="application/pdf" data-button="Examinar" data-empty="Sin archivos"  />
+            </div>
+            <div class="input">
+                <input type="submit">
+            </div>
+        </form>
+        
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+    <footer class="footer">
+		
+        <div class="footer__contenedor-info">
+            <h3>Contacto:</h3>
+            <ul>
+                <li>Tel: +54 3413217015</li>
+                <li>Email: fdelosestudiantes@gmail.com</li>
+                <li>Instagram: <a href="https://www.instagram.com/9dejuliomnr/">9 de Julio</a></li>
+            </ul>
+        </div>
+        <div class="footer__contenedor-info">
+            <h3>Servicios:</h3>
+            <ul>
+                <li>Fotocopias</li>
+                <li>Libros</li>
+                <li>Librerìa</li>
+            </ul>
+        </div>
+        <div id="footer__footer">
+            Creado por PicaWeb. Todos los derechos reservados
+        </div>
+    </footer>
+    
+    <script src="scriptcargarsaldo.js"></script>
+</body>
+</html>
